@@ -1,0 +1,68 @@
+LAPORAN PREPROCESSING EDUPASS
+Generated: 2026-04-11 00:53:30
+=======================================================
+
+INPUT DATASET:
+  Rapor siswa    :  1000 baris | 9 kolom
+  Indeks sekolah :  1000 baris | 6 kolom
+  Nilai eligible :  3786 baris | 10 kolom
+  Daya tampung   :  5142 baris | 12 kolom
+
+OUTPUT DATASET:
+  dataset_final_ml.csv     :  1000 baris | 23 kolom
+  passing_grade_clean.csv  :  3724 baris | 5 kolom
+  daya_tampung_clean.csv   :  5053 baris | 10 kolom
+  indeks_sekolah_clean.csv :  1000 baris | 9 kolom
+
+PERUBAHAN PADA RAPOR SISWA:
+  + nilai_sem5        : ditambahkan (estimasi dari tren sem1-sem4)
+  + rata_rata         : dihitung ulang dari sem1-sem5
+  + nama_sekolah      : ditambahkan (dari indeks sekolah)
+  + ranking           : peringkat nasional sekolah
+  + akreditasi        : A/B/C (berdasarkan ranking)
+  + indeks_sekolah    : multiplier 85-100 (sesuai makalah)
+  + kuota_eligible    : persentase siswa yang boleh daftar
+  + provinsi          : lokasi sekolah
+  + nilai_berbobot    : rata_rata x (indeks_sekolah/100)
+  + target_ptn        : PTN yang dipilih siswa
+  + target_prodi      : Prodi yang dipilih
+  + passing_grade     : nilai minimal lolos prodi tersebut
+  + daya_tampung_2026 : kuota kursi prodi
+  + peminat_2025      : jumlah peminat tahun lalu
+  + rasio_keketatan   : daya_tampung / peminat
+  + target_lulus_snbp : label realistis berdasarkan logika SNBP
+
+DISTRIBUSI LABEL:
+  Lulus (1)      :  267 siswa (26.7%)
+  Tidak Lulus (0):  733 siswa (73.3%)
+
+KOLOM DATASET FINAL (untuk training ML):
+  01. nama
+  02. jurusan_sma
+  03. nilai_sem1
+  04. nilai_sem2
+  05. nilai_sem3
+  06. nilai_sem4
+  07. nilai_sem5
+  08. rata_rata
+  09. nama_sekolah
+  10. ranking
+  11. akreditasi
+  12. indeks_sekolah
+  13. kuota_eligible
+  14. provinsi
+  15. nilai_berbobot
+  16. target_ptn
+  17. target_prodi
+  18. target_jenjang
+  19. passing_grade
+  20. daya_tampung_2026
+  21. peminat_2025
+  22. rasio_keketatan
+  23. target_lulus_snbp
+
+KETERANGAN KOLOM:
+  Fitur utama Random Forest  : nilai_berbobot, passing_grade,
+                               rasio_keketatan, akreditasi, indeks_sekolah
+  Fitur Linear Regression    : nilai_sem1-sem5, rata_rata, indeks_sekolah
+  Label                      : target_lulus_snbp (0=tidak lulus, 1=lulus)
