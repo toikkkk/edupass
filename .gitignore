@@ -1,0 +1,24 @@
+@"
+# Python
+__pycache__/
+*.py[cod]
+*.pkl
+venv/
+.env
+
+# Data sensitif
+data/*.csv
+data/*.json
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+"@ | Out-File -FilePath .gitignore -Encoding utf8
