@@ -1,0 +1,19 @@
+# Django & REST API
+django==4.2.13
+djangorestframework==3.15.2
+
+# MongoDB
+pymongo==4.7.2
+dnspython==2.6.1
+
+# Environment
+python-dotenv==1.0.1
+
+# Machine Learning
+scikit-learn==1.5.0
+pandas==2.2.2
+numpy==1.26.4
+joblib==1.4.2
+
+# Utility
+requests==2.32.3
