@@ -1,13 +1,14 @@
-from pathlib import Path
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.getenv("SECRET_KEY", "edupass-secret-key-2026")
+SECRET_KEY = os.getenv("SECRET_KEY", "edupass-secret-key-2026-ganti-ini")
+
 DEBUG = os.getenv("DEBUG", "True") == "True"
+
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
@@ -17,11 +18,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
-    "app_predictions",
-    "app_universities",
-    "app_schools",
+    # Apps EduPass
     "app_users",
+    "app_schools",
+    "app_universities",
+    "app_predictions",
 ]
 
 MIDDLEWARE = [
@@ -39,7 +40,7 @@ ROOT_URLCONF = "edupass_config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -54,37 +55,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "edupass_config.wsgi.application"
 
-# MongoDB Atlas
-MONGO_URI    = os.getenv("MONGO_URI")
-MONGO_DB     = os.getenv("MONGO_DB_NAME", "edupass")
-
-# Django default DB (tidak dipakai, tapi wajib ada)
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME", "postgres"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {
+            "sslmode": "require",
+        },
     }
 }
 
-LANGUAGE_CODE = "id"
-TIME_ZONE     = "Asia/Jakarta"
-USE_I18N      = True
-USE_TZ        = True
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
 
-STATIC_URL    = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+LANGUAGE_CODE = "id"
+TIME_ZONE = "Asia/Jakarta"
+USE_I18N = True
+USE_TZ = True
+
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# ML Models path
-ML_MODELS_DIR = BASE_DIR / "ml_models"
-
-# REST Framework
-REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
-    ],
-    "DEFAULT_PARSER_CLASSES": [
-        "rest_framework.parsers.JSONParser",
-    ],
-}

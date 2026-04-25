@@ -1,17 +1,3 @@
-"""
-PREPROCESSING EDUPASS
-Mengolah 4 dataset mentah menjadi dataset final siap training ML
-
-INPUT  : dataset_dummy_rapor_snbp.csv, dataset_indeks_sekolah_top1000_4.csv,
-         nilai_eligible_snbp.csv, daya_tampung_snbp.csv
-OUTPUT : dataset_final_ml.csv, passing_grade_clean.csv,
-         daya_tampung_clean.csv, indeks_sekolah_clean.csv, preprocessing_report.txt
-
-CARA JALANKAN:
-  Letakkan semua file CSV input di folder yang sama dengan script ini, lalu:
-  C:/Users/thori/AppData/Local/Programs/Python/Python311/python.exe preprocessing_edupass.py
-"""
-
 import pandas as pd
 import numpy as np
 import os
@@ -25,9 +11,7 @@ print("  Mempersiapkan dataset untuk training ML")
 print("=" * 60)
 
 
-# ─────────────────────────────────────────────────────────────
 # LOAD SEMUA DATA
-# ─────────────────────────────────────────────────────────────
 
 print("\n[1/7] Loading semua dataset...")
 
@@ -42,9 +26,7 @@ print("  Nilai eligible :", df_nilai.shape)
 print("  Daya tampung   :", df_daya.shape)
 
 
-# ─────────────────────────────────────────────────────────────
 # STEP 1: BERSIHKAN NILAI ELIGIBLE
-# ─────────────────────────────────────────────────────────────
 
 print("\n[2/7] Membersihkan nilai eligible (passing grade)...")
 
@@ -60,9 +42,7 @@ print("  Passing grade bersih :", df_nilai_clean.shape)
 print("  Range nilai          :", df_nilai_clean["nilai_rata_rata"].min(), "-", df_nilai_clean["nilai_rata_rata"].max())
 
 
-# ─────────────────────────────────────────────────────────────
 # STEP 2: BERSIHKAN DAYA TAMPUNG
-# ─────────────────────────────────────────────────────────────
 
 print("\n[3/7] Membersihkan daya tampung...")
 
@@ -81,9 +61,7 @@ print("  Daya tampung bersih :", df_daya_clean.shape)
 print("  PTN unik            :", df_daya_clean["nama_ptn"].nunique())
 
 
-# ─────────────────────────────────────────────────────────────
 # STEP 3: SIAPKAN INDEKS SEKOLAH
-# ─────────────────────────────────────────────────────────────
 
 print("\n[4/7] Menyiapkan indeks sekolah...")
 
@@ -115,9 +93,7 @@ print("  Distribusi akreditasi:", df_sekolah_clean["akreditasi"].value_counts().
 print("  Range indeks         :", df_sekolah_clean["indeks_sekolah"].min(), "-", df_sekolah_clean["indeks_sekolah"].max())
 
 
-# ─────────────────────────────────────────────────────────────
 # STEP 4: PERBAIKI DATASET RAPOR SISWA
-# ─────────────────────────────────────────────────────────────
 
 print("\n[5/7] Memperbaiki dataset rapor siswa...")
 
@@ -189,9 +165,7 @@ print("  Sample nilai_berbobot   :", df_ml["nilai_berbobot"].head(3).tolist())
 print("  Sample passing_grade    :", df_ml["passing_grade"].head(3).tolist())
 
 
-# ─────────────────────────────────────────────────────────────
 # STEP 5: HITUNG LABEL REALISTIS (target 25-35% lulus)
-# ─────────────────────────────────────────────────────────────
 
 print("\n[6/7] Menghitung label target_lulus_snbp yang realistis...")
 
@@ -239,9 +213,7 @@ print(f"    Lulus (1)      : {label_dist.get(1,0)} siswa ({lulus_pct}%)")
 print(f"    Tidak lulus (0): {label_dist.get(0,0)} siswa ({tdk_lulus_pct}%)")
 
 
-# ─────────────────────────────────────────────────────────────
 # STEP 6: FINALISASI KOLOM DAN SIMPAN
-# ─────────────────────────────────────────────────────────────
 
 print("\n[7/7] Finalisasi dan simpan...")
 

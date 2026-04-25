@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import Sekolah
 
-# Register your models here.
+@admin.register(Sekolah)
+class SekolahAdmin(admin.ModelAdmin):
+    list_display = ["nama_sekolah", "provinsi", "akreditasi", "ranking"]
+    search_fields = ["nama_sekolah", "provinsi"]
+    list_filter = ["akreditasi", "provinsi"]
