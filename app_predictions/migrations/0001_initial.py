@@ -1,61 +1,72 @@
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-    initial = True
 
+    initial = True
     dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='StudentPredictionDataset',
+            name="PTN",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nama', models.CharField(max_length=150)),
-                ('jurusan_sma', models.CharField(max_length=50)),
-                ('nilai_sem1', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('nilai_sem2', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('nilai_sem3', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('nilai_sem4', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('nilai_sem5', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('rata_rata', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('nama_sekolah', models.CharField(db_index=True, max_length=255)),
-                ('ranking', models.PositiveIntegerField(blank=True, db_index=True, null=True)),
-                ('akreditasi', models.CharField(db_index=True, max_length=10)),
-                ('indeks_sekolah', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('kuota_eligible', models.DecimalField(decimal_places=2, max_digits=4)),
-                ('provinsi', models.CharField(db_index=True, max_length=100)),
-                ('nilai_berbobot', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('target_ptn', models.CharField(db_index=True, max_length=255)),
-                ('target_prodi', models.CharField(db_index=True, max_length=255)),
-                ('target_jenjang', models.CharField(max_length=50)),
-                ('passing_grade', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('daya_tampung_2026', models.PositiveIntegerField()),
-                ('peminat_2025', models.PositiveIntegerField(blank=True, null=True)),
-                ('rasio_keketatan', models.DecimalField(blank=True, decimal_places=4, max_digits=8, null=True)),
-                ('target_lulus_snbp', models.BooleanField(db_index=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("kode_resmi", models.CharField(max_length=20, unique=True)),
+                ("nama_ptn", models.CharField(max_length=255)),
+                ("akronim", models.CharField(blank=True, max_length=50, null=True)),
+                ("kategori", models.CharField(blank=True, max_length=100, null=True)),
+                ("provinsi", models.CharField(blank=True, max_length=100, null=True)),
+                ("kab_kota", models.CharField(blank=True, max_length=120, null=True)),
+                ("website", models.CharField(blank=True, max_length=255, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
-            options={
-                'db_table': 'student_prediction_datasets',
-                'ordering': ['nama', 'target_ptn', 'target_prodi'],
-            },
+            options={"db_table": "ptn", "ordering": ["nama_ptn"]},
         ),
-        migrations.AddIndex(
-            model_name='studentpredictiondataset',
-            index=models.Index(fields=['target_ptn'], name='student_pre_target__9de091_idx'),
+        migrations.CreateModel(
+            name="Prodi",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("ptn", models.ForeignKey(db_column="ptn_id", on_delete=django.db.models.deletion.CASCADE, related_name="prodi_set", to="app_universities.ptn")),
+                ("kode_prodi", models.CharField(max_length=20, unique=True)),
+                ("nama_prodi", models.CharField(max_length=255)),
+                ("jenjang", models.CharField(blank=True, max_length=50, null=True)),
+                ("kelompok", models.CharField(blank=True, max_length=100, null=True)),
+                ("portofolio", models.BooleanField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+            ],
+            options={"db_table": "prodi", "ordering": ["nama_prodi"]},
         ),
-        migrations.AddIndex(
-            model_name='studentpredictiondataset',
-            index=models.Index(fields=['target_prodi'], name='student_pre_target__0a77e7_idx'),
+        migrations.CreateModel(
+            name="DayaTampung",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("prodi", models.OneToOneField(db_column="prodi_id", on_delete=django.db.models.deletion.CASCADE, related_name="daya_tampung", to="app_universities.prodi")),
+                ("daya_tampung_2026", models.IntegerField(blank=True, null=True)),
+                ("peminat_2025", models.IntegerField(blank=True, null=True)),
+                ("rasio_keketatan", models.FloatField(blank=True, null=True)),
+                ("sumber", models.CharField(blank=True, max_length=255, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+            ],
+            options={"db_table": "daya_tampung"},
         ),
-        migrations.AddIndex(
-            model_name='studentpredictiondataset',
-            index=models.Index(fields=['akreditasi'], name='student_pre_akredit_73c47d_idx'),
+        migrations.CreateModel(
+            name="PassingGrade",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("prodi", models.ForeignKey(db_column="prodi_id", on_delete=django.db.models.deletion.CASCADE, related_name="passing_grades", to="app_universities.prodi")),
+                ("nilai_rata_rata", models.FloatField()),
+                ("tahun", models.IntegerField()),
+                ("sumber", models.CharField(blank=True, max_length=255, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+            ],
+            options={"db_table": "passing_grade"},
         ),
-        migrations.AddIndex(
-            model_name='studentpredictiondataset',
-            index=models.Index(fields=['target_lulus_snbp'], name='student_pre_target__d22859_idx'),
+        migrations.AddConstraint(
+            model_name="passinggrade",
+            constraint=models.UniqueConstraint(
+                fields=["prodi_id", "tahun"],
+                name="uniq_passing_grade_prodi_tahun",
+            ),
         ),
     ]
